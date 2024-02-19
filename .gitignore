@@ -1,0 +1,7 @@
+.vscode/
+__pycache__/
+
+Presentation.ppx
+Sleep_health_and_lifestyle_dataset.csv
+Notebook_1.ipynb
+Notebook_2.ipynb
