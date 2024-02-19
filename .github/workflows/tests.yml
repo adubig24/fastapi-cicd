@@ -3,7 +3,7 @@ name: Python Test
 on:
   push:
     branches:
-      - main  # Change to your default branch name if it's different
+      - main
 
 jobs:
   test:
@@ -15,7 +15,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.8'  # Change to your Python version if necessary
+        python-version: '3.12.1'
       
     - name: Install dependencies
       run: |

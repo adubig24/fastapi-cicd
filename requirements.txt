@@ -6,3 +6,4 @@ fastapi
 mlflow
 boto3
 uvicorn
+httpx
