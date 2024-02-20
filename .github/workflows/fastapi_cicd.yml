@@ -30,9 +30,8 @@ jobs:
         echo "$EC2_SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
         ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && \
-        docker-compose down && \
+        kill $(pgrep -f "python3 api.py") && \
         git pull origin main && \
-        docker-compose build && \
-        docker-compose up -d"
+        python3 api.py &"
       env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
