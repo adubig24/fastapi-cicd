@@ -38,4 +38,4 @@ jobs:
       
     - name: Deploy to EC2
       run: |
-        ssh -i ~/.ssh/ec2.pem ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && kill -f 'python3 api.py' && python3 api.py"
+        ssh -o "StrictHostKeyChecking=accept-new" -i ~/.ssh/ec2.pem ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && kill -f 'python3 api.py' && python3 api.py"
