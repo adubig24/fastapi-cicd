@@ -32,5 +32,5 @@ jobs:
 
     - name: Deploy 
       run: |
-        ssh -o StrictHostKeyChecking=no -i ssh.em ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && nohup python3 api.py > /dev/null 2>&1 & exit"
+        ssh -o StrictHostKeyChecking=no -i ssh.em ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && nohup python3 api.py > /dev/null 2>&1 < /dev/null &"
 
