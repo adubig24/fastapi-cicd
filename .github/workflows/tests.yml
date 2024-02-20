@@ -35,5 +35,5 @@ jobs:
         script: |
           cd ~/fastapi-cicd/
           git pull origin main
-          pkill -f "python3 api.py"
+          kill -f "python3 api.py"
           python3 api.py
