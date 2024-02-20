@@ -35,6 +35,6 @@ jobs:
 
     - name: Update and Deploy
       run: |
-        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && python3 api.py &"
+        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && screen -dmS api_session python3 api.py"
       env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
