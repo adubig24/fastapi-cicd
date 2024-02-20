@@ -25,13 +25,11 @@ jobs:
     - name: Run tests
       run: python test.py
 
-    - name: Update
+    - name: Update and Deploy 
       run: |
         chmod 600 ssh.em
-        ssh -o StrictHostKeyChecking=no -i ssh.em ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && pkill -f 'python3 api.py'"
-
-    - name: Deploy 
-      run: |
-        ssh -o StrictHostKeyChecking=no -i ssh.em ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && nohup python3 api.py > /dev/null 2>&1 < /dev/null & disown"
-
-
+        ssh -o StrictHostKeyChecking=no -i ssh.em ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && \
+        docker-compose down && \
+        git pull origin main && \
+        docker-compose build && \
+        docker-compose up -d"
