@@ -30,7 +30,7 @@ tags = [
 # Création de l'application
 app = FastAPI(
        title="API de prediction",
-       description= "Predictions",
+       description="Predictions",
        version= "1.0.0",
        openapi_tags= tags
 )
