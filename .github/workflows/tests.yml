@@ -25,15 +25,14 @@ jobs:
     - name: Run tests
       run: python test.py
 
-    - name: SSH to EC2 and deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.EC2_HOST }} # EC2 instance public IP or DNS
-        username: ${{ secrets.EC2_USERNAME }} # EC2 instance username
-        key: ${{ secrets.EC2_PRIVATE_KEY }} # SSH private key for accessing EC2 instance
-        port: ${{ secrets.EC2_PORT }} # SSH port, default is 22
-        script: |
-          cd ~/fastapi-cicd/
-          git pull origin main
-          kill -f "python3 api.py"
-          python3 api.py
+
+  deploy:
+    needs: test  # Wait for the 'test' job to finish before deploying
+    runs-on: ubuntu-latest
+    steps:
+    - name: Copy SSH key
+      run: echo "$EC2_SSH_KEY" > ~/.ssh/ec2.pem && chmod 600 ~/.ssh/ec2.pem
+      
+    - name: Deploy to EC2
+      run: |
+        ssh -i ~/.ssh/ec2.pem ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && kill -f 'python3 api.py' && python3 api.py"
