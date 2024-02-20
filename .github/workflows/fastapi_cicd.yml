@@ -12,17 +12,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
       
-    - name: Set up Python 
+    - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.12.1'
       
-    - name: Install dependencies
+    - name: Install dependencies 
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
       
-    - name: Run tests
+    - name: Run tests 
       run: python test.py
 
     - name: Update and Deploy
@@ -30,7 +30,7 @@ jobs:
         echo "$EC2_SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
         ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && \
-        kill $(pgrep -f "python3 api.py") && \
+        kill $(pgrep -f 'python3 api.py') && \
         git pull origin main && \
         python3 api.py &"
       env:
