@@ -31,7 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Copy SSH key
-      run: echo "$EC2_SSH_KEY" > ~/.ssh/ec2.pem && chmod 600 ~/.ssh/ec2.pem
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$EC2_SSH_KEY" > ~/.ssh/ec2.pem
+        chmod 600 ~/.ssh/ec2.pem
       
     - name: Deploy to EC2
       run: |
