@@ -25,9 +25,6 @@ jobs:
     - name: Run tests
       run: python test.py
 
-    - name: Debug SSH Key
-      run: echo "$EC2_SSH_KEY" > ssh_key.pem && cat ssh_key.pem
-
     - name: Update and Deploy
       run: |
         echo "$EC2_SSH_KEY" > ssh_key.pem
