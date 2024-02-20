@@ -1,5 +1,6 @@
 .vscode/
 __pycache__/
+*.pyc
 
 Presentation.ppx
 Sleep_health_and_lifestyle_dataset.csv
