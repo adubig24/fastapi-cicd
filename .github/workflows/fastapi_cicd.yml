@@ -25,10 +25,16 @@ jobs:
     - name: Run tests 
       run: python test.py
 
-    - name: Update and Deploy
-      run: |
+    - name: Kill app
+      run : |
         echo "$EC2_SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
-        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && kill $(pgrep -f 'python3 api.py') && git pull origin main && python3 api.py &"
+        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "kill $(pgrep -f python3\ api.py)"
+      env:
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+
+    - name: Update and Deploy
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && python3 api.py &"
       env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
