@@ -29,4 +29,3 @@ jobs:
       run: |
         chmod 600 ssh.em
         ssh -o StrictHostKeyChecking=no -i ssh.em ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && pkill -f 'python3 api.py'"
-        ssh -o StrictHostKeyChecking=no -i ssh.em ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && python3 api.py"
