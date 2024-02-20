@@ -35,5 +35,5 @@ jobs:
         script: |
           cd ~/fastapi-cicd/
           git pull origin main
-          kill $(pgrep -f "uvicorn your_app_module:app")
+          pkill -f "python3 api.py"
           python3 api.py
