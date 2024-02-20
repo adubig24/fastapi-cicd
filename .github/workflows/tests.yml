@@ -32,4 +32,4 @@ jobs:
 
     - name: Deploy
       run: |
-        ssh -o StrictHostKeyChecking=no -i ssh.em ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "python3 api.py"
+        ssh -o StrictHostKeyChecking=no -i ssh.em ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && python3 api.py"
