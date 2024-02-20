@@ -32,10 +32,10 @@ jobs:
     steps:
     - name: Copy SSH key
       run: |
-        mkdir -p ~/.ssh/
-        echo "$EC2_SSH_KEY" > ~/.ssh/ec2.pem
-        chmod 600 ~/.ssh/ec2.pem
+        echo "$EC2_SSH_KEY" > ~/ssh.em
+        chmod 600 ~/ssh.em
       
     - name: Deploy to EC2
       run: |
-        ssh -vvv -o "StrictHostKeyChecking=accept-new" -i ~/.ssh/ec2.pem ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && kill -f 'python3 api.py' && python3 api.py"
+        ssh -i ssh.em ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && pkill -f 'python3 api.py'"
+        ssh -i ssh.em ubuntu@ec2-18-201-138-117.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && python3 api.py"
