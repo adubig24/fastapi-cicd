@@ -25,7 +25,7 @@ jobs:
     - name: Run tests
       run: python test.py
 
-    - name: Kill app 
+    - name: Kill app
       run : |
         echo "$EC2_SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
