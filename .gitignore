@@ -1,8 +1,13 @@
 .vscode/
 __pycache__/
 *.pyc
+mlruns/
 
+all_dict.json
 Presentation.pptx
-Sleep_health_and_lifestyle_dataset.csv
+MLOps_avec_MLFlow.ipynb
 Notebook_1.ipynb
 Notebook_2.ipynb
+Sleep_health_and_lifestyle_dataset.csv
+train.csv
+model.joblib
