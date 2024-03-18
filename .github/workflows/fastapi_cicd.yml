@@ -38,7 +38,7 @@ jobs:
       env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
-    - name: Check if MLflow UI is running 
+    - name: Check if MLflow UI is running
       run: |
         if ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-52-214-211-49.eu-west-1.compute.amazonaws.com "pgrep -f 'mlflow ui'"; then
           echo "MLflow UI is running, killing it"
