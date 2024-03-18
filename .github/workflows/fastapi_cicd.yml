@@ -27,9 +27,12 @@ jobs:
 
     - name: Kill app
       run : |
-        echo "$EC2_SSH_KEY" > ssh_key.pem
-        chmod 600 ssh_key.pem
+        if ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-52-214-211-49.eu-west-1.compute.amazonaws.com "pgrep -f 'screen -S api_session'"; then
+        echo "App is running, proceeding to kill it"
         ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-52-214-211-49.eu-west-1.compute.amazonaws.com "screen -S api_session -X quit"
+        else
+          echo "App is not running"
+        fi
       env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
