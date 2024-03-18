@@ -38,6 +38,15 @@ jobs:
       env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
+    - name: Check if MLflow UI is running
+      run: |
+        if ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-52-214-211-49.eu-west-1.compute.amazonaws.com "pgrep -f 'mlflow ui'"; then
+          echo "MLflow UI is running, killing it"
+          ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-52-214-211-49.eu-west-1.compute.amazonaws.com "pkill -f 'mlflow ui'"
+        else
+          echo "MLflow UI is not running"
+        fi
+
     - name: Update and Deploy
       run: |
-        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-52-214-211-49.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && screen -dmS api_session python3 api.py"
+        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-52-214-211-49.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && screen -dmS api_session sh -c 'mlflow ui & python3 api.py'"
