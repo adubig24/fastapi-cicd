@@ -49,4 +49,5 @@ jobs:
 
     - name: Update and Deploy
       run: |
-        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-52-214-211-49.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && screen -dmS api_session sh -c 'mlflow ui -h 0.0.0.0 -p 5000 & python3 api.py'"
+        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-52-214-211-49.eu-west-1.compute.amazonaws.com "cd ~/fastapi-cicd && git pull origin main && screen -dmS api_session sh -c 'python3 api.py'"
+        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@ec2-52-214-211-49.eu-west-1.compute.amazonaws.com "cd ~/mlflow && git pull origin main && screen -dmS api_session sh -c 'mlflow ui -h 0.0.0.0 -p 5000'"
