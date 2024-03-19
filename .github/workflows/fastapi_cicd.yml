@@ -31,7 +31,7 @@ jobs:
       run : |
         echo "$EC2_SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
-        if ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "pgrep -f 'screen -S api_session'"; then
+        if ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "pgrep -f 'screen -dmS api_session'"; then
         echo "App is running, proceeding to kill it"
         ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "screen -S api_session -X quit"
         else
@@ -42,9 +42,9 @@ jobs:
 
     - name: Check if MLflow UI is running
       run: |
-        if ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "pgrep -f 'mlflow ui'"; then
+        if ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "pgrep -f 'mlflow'"; then
           echo "MLflow UI is running, killing it"
-          ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "pkill -f 'mlflow ui'"
+          ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "pkill -f 'mlflow'"
         else
           echo "MLflow UI is not running"
         fi
@@ -52,4 +52,4 @@ jobs:
     - name: Update and Deploy
       run: |
         ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "cd ~/fastapi-cicd && git pull origin main && screen -dmS api_session sh -c 'python3 api.py'"
-        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "cd ~/mlflow && screen -dmS api_session sh -c 'mlflow ui -h 0.0.0.0 -p 5000'"
+        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "cd ~/mlflow && screen -dmS mlflow_session sh -c 'mlflow ui -h 0.0.0.0 -p 5000'"
