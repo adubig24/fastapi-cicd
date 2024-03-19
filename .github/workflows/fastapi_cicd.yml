@@ -29,7 +29,9 @@ jobs:
       run: python test.py
 
     - name: Save SSH key
-      run: echo "$EC2_SSH_KEY" > ssh_key.pem
+      run: |
+        echo "$EC2_SSH_KEY" > ssh_key.pem
+        chmod 600 ssh_key.pem
       env:
         EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
