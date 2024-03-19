@@ -44,7 +44,8 @@ jobs:
       run: |
         if ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && pgrep -f 'mlflow'"; then
           echo "MLflow UI is running, killing it"
-          ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && pkill -f 'mlflow_session' && sleep 1 && pkill -f 'mlflow'"
+          ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && pkill -f 'mlflow'"
+          ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && pkill -f 'mlflow'"
         else
           echo "MLflow UI is not running"
         fi
