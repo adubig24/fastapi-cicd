@@ -28,35 +28,30 @@ jobs:
     - name: Run tests 
       run: python test.py
 
-    - name: Save SSH key
-      run: |
-        echo "$EC2_SSH_KEY" > ~/ssh_key.pem
-        chmod 600 ~/ssh_key.pem
-
     - name: Check if project exists, create if it doesn't
       run: |
-        ssh -o StrictHostKeyChecking=no -i ~/ssh_key.pem ubuntu@$EC2_ADDRESS "[ -d ~/fastapi-cicd ] && echo 'API Exists' || git clone https://github.com/adubig24/fastapi-cicd.git"
-        ssh -o StrictHostKeyChecking=no -i ~/ssh_key.pem ubuntu@$EC2_ADDRESS "[ -d ~/mlflow ] && echo 'MLFlow Exists' || mkdir mlflow"
+        ssh -o StrictHostKeyChecking=no -i <(echo "$EC2_SSH_KEY") ubuntu@$EC2_ADDRESS "[ -d ~/fastapi-cicd ] && echo 'API Exists' || git clone https://github.com/adubig24/fastapi-cicd.git"
+        ssh -o StrictHostKeyChecking=no -i <(echo "$EC2_SSH_KEY") ubuntu@$EC2_ADDRESS "[ -d ~/mlflow ] && echo 'MLFlow Exists' || mkdir mlflow"
 
     - name: Stop API if running
       run : |
-        if ssh -o StrictHostKeyChecking=no -i ~/ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && pgrep -f 'api'"; then
+        if ssh -o StrictHostKeyChecking=no -i <(echo "$EC2_SSH_KEY") ubuntu@$EC2_ADDRESS "source ~/.profile && pgrep -f 'api'"; then
         echo "App is running, proceeding to kill it"
-        ssh -o StrictHostKeyChecking=no -i ~/ssh_key.pem ubuntu@$EC2_ADDRESS ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && screen -S api -X quit"
+        ssh -o StrictHostKeyChecking=no -i <(echo "$EC2_SSH_KEY") ubuntu@$EC2_ADDRESS ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && screen -S api -X quit"
         else
           echo "App is not running"
         fi
 
     - name: Stop MLFlow if running
       run: |
-        if ssh -o StrictHostKeyChecking=no -i ~/ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && pgrep -f 'mlflow'"; then
+        if ssh -o StrictHostKeyChecking=no -i <(echo "$EC2_SSH_KEY") ubuntu@$EC2_ADDRESS "source ~/.profile && pgrep -f 'mlflow'"; then
           echo "MLflow UI is running, killing it"
-          ssh -o StrictHostKeyChecking=no -i ~/ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && pkill -f 'mlflow'"
-          ssh -o StrictHostKeyChecking=no -i ~/ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && pkill -f 'mlflow'"
+          ssh -o StrictHostKeyChecking=no -i <(echo "$EC2_SSH_KEY") ubuntu@$EC2_ADDRESS "source ~/.profile && pkill -f 'mlflow'"
+          ssh -o StrictHostKeyChecking=no -i <(echo "$EC2_SSH_KEY") ubuntu@$EC2_ADDRESS "source ~/.profile && pkill -f 'mlflow'"
         else
           echo "MLflow UI is not running"
         fi
 
     - name: Update and Deploy
       run: |
-        ssh -o StrictHostKeyChecking=no -i ~/ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && sh ~/fastapi-cicd/script.sh"
+        ssh -o StrictHostKeyChecking=no -i <(echo "$EC2_SSH_KEY") ubuntu@$EC2_ADDRESS "source ~/.profile && sh ~/fastapi-cicd/script.sh"
