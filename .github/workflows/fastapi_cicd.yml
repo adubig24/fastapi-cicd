@@ -27,7 +27,7 @@ jobs:
     - name: Run tests 
       run: python test.py
 
-    - name: Kill app
+    - name: Stop API if running
       run : |
         echo "$EC2_SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
@@ -40,7 +40,7 @@ jobs:
       env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
-    - name: Check if MLflow UI is running
+    - name: Stop MLFlow if running
       run: |
         if ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "pgrep -f 'mlflow'"; then
           echo "MLflow UI is running, killing it"
