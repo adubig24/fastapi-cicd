@@ -32,8 +32,6 @@ jobs:
       run: |
         echo "$EC2_SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
-      env:
-        EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
     - name: Check if project exists, create if it doesn't
       run: |
