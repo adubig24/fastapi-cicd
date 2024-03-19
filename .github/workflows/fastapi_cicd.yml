@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       EC2_ADDRESS: ${{ secrets.EC2_ADDRESS }}
+      EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -27,14 +28,15 @@ jobs:
     - name: Run tests 
       run: python test.py
 
-    - name: Check if project exists, create if it doesn't
-      run: |
-        echo "$EC2_SSH_KEY" > ssh_key.pem
-        chmod 600 ssh_key.pem
-        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "[ -d ~/fastapi-cicd ] && echo 'API Exists' || git clone https://github.com/adubig24/fastapi-cicd.git"
-        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "[ -d ~/mlflow ] && echo 'MLFlow Exists' || mkdir mlflow"
+    - name: Save SSH key
+      run: echo "$EC2_SSH_KEY" > ssh_key.pem
       env:
         EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+
+    - name: Check if project exists, create if it doesn't
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "[ -d ~/fastapi-cicd ] && echo 'API Exists' || git clone https://github.com/adubig24/fastapi-cicd.git"
+        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "[ -d ~/mlflow ] && echo 'MLFlow Exists' || mkdir mlflow"
 
     - name: Stop API if running
       run : |
