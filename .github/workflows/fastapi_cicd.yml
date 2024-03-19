@@ -28,27 +28,24 @@ jobs:
     - name: Run tests 
       run: python test.py
 
-    - name: Check if project exists, create if it doesn't
+    - name: Save SSH key
       run: |
         echo "$EC2_SSH_KEY" > ssh_key.pem
         chmod 600 ssh_key.pem
+
+    - name: Check if project exists, create if it doesn't
+      run: |
         ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "[ -d ~/fastapi-cicd ] && echo 'API Exists' || git clone https://github.com/adubig24/fastapi-cicd.git"
         ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "[ -d ~/mlflow ] && echo 'MLFlow Exists' || mkdir mlflow"
-      env: 
-        EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
     - name: Stop API if running
       run : |
-        echo "$EC2_SSH_KEY" > ssh_key.pem
-        chmod 600 ssh_key.pem
         if ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && pgrep -f 'api'"; then
-          echo "App is running, proceeding to kill it"
-          ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && screen -S api -X quit"
+        echo "App is running, proceeding to kill it"
+        ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && screen -S api -X quit"
         else
           echo "App is not running"
         fi
-      env: 
-        EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
     - name: Stop MLFlow if running
       run: |
@@ -59,9 +56,7 @@ jobs:
         else
           echo "MLflow UI is not running"
         fi
-      env: 
-        EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-        
+
     - name: Update and Deploy
       run: |
         ssh -o StrictHostKeyChecking=no -i ssh_key.pem ubuntu@$EC2_ADDRESS "source ~/.profile && sh ~/fastapi-cicd/script.sh"
